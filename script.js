@@ -30,6 +30,8 @@ const COMMANDS = {
     "  ls projects/      — things i've built",
     "  cat &lt;project&gt;     — details on a project (myr, juke, protostar)",
     "  open &lt;link&gt;       — github, linkedin, email",
+    "  run &lt;effect&gt;      — glitch, warp, or matrix",
+    "  run reset         — stop the current effect",
     "  clear             — clear the terminal",
     "  exit              — close",
   ],
@@ -116,6 +118,11 @@ const COMMANDS = {
   "open github": () => { window.open("https://github.com/CBernsCode", "_blank"); return ["opening github..."]; },
   "open linkedin": () => { window.open("https://www.linkedin.com/in/chris-berns/", "_blank"); return ["opening linkedin..."]; },
   "open email": () => { window.location.href = "mailto:chris@chrisberns.com"; return ["opening email..."]; },
+
+  "run glitch": () => { window.chris.glitch(); return ["running glitch — chris.reset() or <span class='t-accent'>run reset</span> to stop"]; },
+  "run warp":   () => { window.chris.warp();   return ["running warp — chris.reset() or <span class='t-accent'>run reset</span> to stop"]; },
+  "run matrix": () => { window.chris.matrix(); return ["running matrix — chris.reset() or <span class='t-accent'>run reset</span> to stop"]; },
+  "run reset":  () => { window.chris.reset();  return ["effect stopped"]; },
 
   clear: () => "__clear__",
   exit: () => "__exit__",
@@ -233,13 +240,39 @@ inputEl.addEventListener("keydown", (e) => {
   }
 });
 
-closeBtn.addEventListener("click", closeTerminal);
+closeBtn.addEventListener("click", () => {
+  if (document.body.classList.contains("dev-mode")) {
+    exitDevMode();
+  } else {
+    closeTerminal();
+  }
+});
+
+let devMode = false;
+
+function enterDevMode() {
+  devMode = true;
+  document.body.classList.add("dev-mode");
+  document.getElementById("dev-mode-toggle").textContent = "✕ exit";
+  openTerminal();
+}
+
+function exitDevMode() {
+  devMode = false;
+  document.body.classList.remove("dev-mode");
+  document.getElementById("dev-mode-toggle").textContent = ">_";
+  closeTerminal();
+}
+
+document.getElementById("dev-mode-toggle").addEventListener("click", () => {
+  devMode ? exitDevMode() : enterDevMode();
+});
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "`" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
     e.preventDefault();
     isOpen ? closeTerminal() : openTerminal();
   } else if (e.key === "Escape" && isOpen) {
-    closeTerminal();
+    devMode ? exitDevMode() : closeTerminal();
   }
 });

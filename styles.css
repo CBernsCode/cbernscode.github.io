@@ -57,6 +57,26 @@ nav a.active {
   color: var(--accent);
 }
 
+#dev-mode-toggle {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+#dev-mode-toggle:hover,
+body.dev-mode #dev-mode-toggle {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+
 /* Main layout */
 main {
   max-width: var(--max-width);
@@ -258,12 +278,37 @@ footer {
   display: flex;
   flex-direction: column;
   z-index: 100;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-radius 0.3s;
   box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
 }
 
 #terminal.open {
   transform: translateX(-50%) translateY(0);
+}
+
+body.dev-mode #terminal {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  transform: translateX(-50%) translateY(0);
+}
+
+body.dev-mode header,
+body.dev-mode main,
+body.dev-mode footer {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+header,
+main,
+footer {
+  transition: opacity 0.2s;
 }
 
 #terminal-bar {
